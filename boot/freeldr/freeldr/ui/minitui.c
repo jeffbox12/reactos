@@ -188,17 +188,36 @@ MiniTuiDrawMenu(
     /* Draw the backdrop */
     UiDrawBackdrop();
 
+    /* Fill the header background */
+    if (MenuInfo->MenuHeader)
+    {
+        TuiFillArea(1, 0, UiScreenWidth - 2, 0, ' ', ATTR(UiSelectedTextColor, UiSelectedTextBgColor));
+    }
+
     /* No GUI status bar text, just minimal text. Show the menu header. */
     if (MenuInfo->MenuHeader)
     {
-        UiVtbl.DrawText(0,
-                        MenuInfo->Top - 2,
-                        MenuInfo->MenuHeader,
-                        ATTR(UiMenuFgColor, UiMenuBgColor));
+        UiVtbl.DrawCenteredText(0,
+                                0,
+                                UiScreenWidth,
+                                0,
+                                "FreeLdr",
+                                ATTR(UiSelectedTextColor, UiSelectedTextBgColor));
     }
+
+    /* Tell the user how to choose */
+    UiVtbl.DrawText(1,
+                    3,
+                    "Choose an operating system to start, or press TAB to select a tool:",
+                    ATTR(COLOR_WHITE, UiMenuBgColor));
+    UiVtbl.DrawText(1,
+                    4,
+                    "(Use the arrow keys to highlight your choice, then press ENTER.)",
+                    ATTR(UiMenuFgColor, UiMenuBgColor));
 
     /* Draw the menu box */
     TuiDrawMenuBox(MenuInfo);
+    /* Offset the menu by one down */
 
     /* Draw each line of the menu */
     for (i = 0; i < MenuInfo->MenuItemCount; ++i)
@@ -206,23 +225,48 @@ MiniTuiDrawMenu(
         TuiDrawMenuItem(MenuInfo, i);
     }
 
-    /* Now tell the user how to choose */
-    UiVtbl.DrawText(0,
-                    MenuInfo->Bottom + 1,
-                    "Use \x18 and \x19 to move the highlight to your choice.",
-                    ATTR(UiMenuFgColor, UiMenuBgColor));
-    UiVtbl.DrawText(0,
+    /* Tell the user how to view advanced options */
+    UiVtbl.DrawText(1,
                     MenuInfo->Bottom + 2,
-                    "Press ENTER to choose.",
+                    "To specify an advanced option for this choice, press F8.",
+                    ATTR(COLOR_WHITE, UiMenuBgColor));
+
+    /* PLACEHOLDER! Show the tools */
+    UiVtbl.DrawText(1,
+                    18,
+                    "Tools:",
+                    ATTR(COLOR_WHITE, UiMenuBgColor));
+    UiVtbl.DrawText(5,
+                    20,
+                    "No tools available.",
                     ATTR(UiMenuFgColor, UiMenuBgColor));
 
-    /* And show the menu footer */
+    /* Fill the header background */
     if (MenuInfo->MenuFooter)
     {
-        UiVtbl.DrawText(0,
-                        UiScreenHeight - 4,
-                        MenuInfo->MenuFooter,
-                        ATTR(UiMenuFgColor, UiMenuBgColor));
+        TuiFillArea(1, UiScreenHeight - 1, UiScreenWidth - 2, UiScreenHeight, ' ', ATTR(UiSelectedTextColor, UiSelectedTextBgColor));
+    }
+
+    /* Then show the menu keys footer */
+    if (MenuInfo->MenuFooter)
+    {
+        UiVtbl.DrawText(2,
+                        UiScreenHeight - 1,
+                        "ENTER=Choose",
+                        ATTR(UiSelectedTextColor, UiSelectedTextBgColor));
+
+        UiVtbl.DrawCenteredText(0,
+                        (UiScreenHeight * 2 ) - 1,
+                        UiScreenWidth,
+                        0,
+                        "TAB=Tools",
+                        ATTR(UiSelectedTextColor, UiSelectedTextBgColor));
+
+        /* There is no align to left, so I had to improvise */
+        UiVtbl.DrawText(UiScreenWidth - (int)sizeof("ESC=Cancel") - 2,
+                        UiScreenHeight - 1,
+                        "ESC=Cancel",
+                        ATTR(UiSelectedTextColor, UiSelectedTextBgColor));
     }
 
     VideoCopyOffScreenBufferToVRAM();

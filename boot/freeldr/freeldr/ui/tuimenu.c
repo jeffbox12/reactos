@@ -374,6 +374,7 @@ TuiDrawMenuItem(
     CHAR MenuLineText[80];
 
     /* If this is a separator */
+    /* Fill the separator with nothing */
     if (MenuInfo->MenuItemList[MenuItemNumber] == NULL)
     {
         // FIXME: Theme-specific
@@ -381,8 +382,8 @@ TuiDrawMenuItem(
         if (UiMenuBox)
         {
             UiDrawText(MenuInfo->Left,
-                       MenuInfo->Top + 1 + MenuItemNumber,
-                       "\xC7",
+                       MenuInfo->Top + 2 + MenuItemNumber,
+                       " ",
                        ATTR(UiMenuFgColor, UiMenuBgColor));
         }
 
@@ -390,11 +391,11 @@ TuiDrawMenuItem(
         RtlZeroMemory(MenuLineText, sizeof(MenuLineText));
         RtlFillMemory(MenuLineText,
                       min(sizeof(MenuLineText), (MenuInfo->Right - MenuInfo->Left - 1)),
-                      0xC4);
+                      0x00);
 
         /* Draw the item */
         UiDrawText(MenuInfo->Left + 1,
-                   MenuInfo->Top + 1 + MenuItemNumber,
+                   MenuInfo->Top + 2 + MenuItemNumber,
                    MenuLineText,
                    ATTR(UiMenuFgColor, UiMenuBgColor));
 
@@ -403,8 +404,8 @@ TuiDrawMenuItem(
         if (UiMenuBox)
         {
             UiDrawText(MenuInfo->Right,
-                       MenuInfo->Top + 1 + MenuItemNumber,
-                       "\xB6",
+                       MenuInfo->Top + 2 + MenuItemNumber,
+                       " ",
                        ATTR(UiMenuFgColor, UiMenuBgColor));
         }
 
@@ -431,16 +432,14 @@ TuiDrawMenuItem(
     else
     {
         /* Simply left-align it */
-        SpaceLeft  = 4;
-        SpaceRight = 0;
+        SpaceLeft  = 6;
+        SpaceRight = 20;
     }
 
     /* Format the item text string */
     RtlStringCbPrintfA(MenuLineText, sizeof(MenuLineText),
-                       "%*s%s%*s",
-                       SpaceLeft, "",   // Left padding
-                       MenuInfo->MenuItemList[MenuItemNumber],
-                       SpaceRight, ""); // Right padding
+                       "      %s",
+                       MenuInfo->MenuItemList[MenuItemNumber]);
 
     if (MenuItemNumber == MenuInfo->SelectedMenuItem)
     {
@@ -453,11 +452,24 @@ TuiDrawMenuItem(
         Attribute = ATTR(UiTextColor, UiMenuBgColor);
     }
 
+    /* Make it so only does the long selection line when it's in boot selection. */
+
     /* Draw the item */
+    TuiFillArea(0, MenuInfo->Top + 2 + MenuItemNumber, UiScreenWidth, 6 + MenuItemNumber, ' ', Attribute);
+    TuiFillArea(UiScreenWidth - 8, MenuInfo->Top + 2 + MenuItemNumber, UiScreenWidth, 6 + MenuItemNumber, ' ', ATTR(COLOR_BLACK, COLOR_BLACK));
+
     UiDrawText(MenuInfo->Left + 1,
-               MenuInfo->Top + 1 + MenuItemNumber,
+               MenuInfo->Top + 2 + MenuItemNumber,
                MenuLineText,
                Attribute);
+
+    UiDrawText(UiScreenWidth - 9,
+               MenuInfo->Top + 2 + MenuItemNumber,
+               ">",
+               ATTR(COLOR_BLACK, Attribute & 0x0F)); /* Take the state of the Attribute to change only the background color */
+
+    TuiFillArea(0, MenuInfo->Top + 2 + MenuItemNumber, 5, 6 + MenuItemNumber, ' ', ATTR(COLOR_BLACK, COLOR_BLACK));
+
 }
 
 static ULONG
