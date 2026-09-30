@@ -2255,4 +2255,34 @@ Exit:
     return Ret;
 }
 
+INT SetCursorShadow(BOOL state)
+{
+    /* TODO: Perform preparations before calling the real function
+    that does the actual shadows */
+    if (state)
+    {
+        GreSetCursorShadow(/* Things to make shadow */);
+    }
+    else
+    {
+        GreSetCursorShadow(/* Things to remove shadow */);
+    }
+
+
+    /*
+    Pasting this as reference. I've yet to discover where does the decision
+    to render or not render the cursor shadow is made. I don't think this goes here.
+    TO INVESTIGATE
+
+    if (NtGdiGetDeviceCaps(ScreenDeviceContext, BITSPIXEL) <= 8)
+    {
+        INT iValue = 0;
+        return SpiGetInt(pvParam, &iValue, fl);
+    }
+    */
+
+    return TRUE;
+}
+
+
 /* EOF */

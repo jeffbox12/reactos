@@ -49,3 +49,8 @@ GreMovePointer(
     _In_ LONG x,
     _In_ LONG y);
 
+VOID
+NTAPI
+GreSetCursorShadow(
+    /* TODO: Fill in the necessary parameters */
+);
