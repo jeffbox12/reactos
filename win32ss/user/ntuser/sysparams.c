@@ -1683,6 +1683,10 @@ SpiGetSet(UINT uiAction, UINT uiParam, PVOID pvParam, FLONG fl)
             return SpiGetUserPref(UPM_CURSORSHADOW, pvParam, fl);
 
         case SPI_SETCURSORSHADOW:
+            /* WIP: This is one of the places it calls the cursor shadow function */
+
+
+            SetCursorShadow(pvParam); /* unimplemented */
             gspv.bMouseCursorShadow = PtrToUlong(pvParam);
             return SpiSetUserPref(UPM_CURSORSHADOW, pvParam, fl);
 

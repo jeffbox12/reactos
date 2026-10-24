@@ -843,5 +843,12 @@ GreMovePointer(
     DC_UnlockDc(pdc);
 }
 
+VOID
+NTAPI
+GreSetCursorShadow()
+{
+    DPRINT1("GreSetCursorShadow() is not implemented yet.\n");
+    return;
+}
 
 /* EOF */
