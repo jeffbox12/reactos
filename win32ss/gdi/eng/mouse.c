@@ -843,5 +843,40 @@ GreMovePointer(
     DC_UnlockDc(pdc);
 }
 
+ULONG
+NTAPI
+GreSetCursorShadow()
+{
+
+    DPRINT1("GreSetCursorShadow is unimplemented!\n");
+
+    SYSTEMCURICO syscur;
+
+    DWORD type;
+    HBITMAP hbm;
+    HBITMAP hbmColor;
+    SHORT xHot;
+    SHORT yHot;
+
+    // #define ROCR_HELP 15 for reference, this is the last cursor
+
+    /* TEST: Loop through all cursors */
+    int n = 0;
+    while(n <= ROCR_HELP)
+    {
+        syscur = gasyscur[n];
+
+        type = syscur.type;
+        hbm = syscur.handle->hbmMask;
+        hbmColor = syscur.handle->hbmColor;
+        xHot = syscur.handle->xHotspot;
+        yHot = syscur.handle->yHotspot;
+
+        DPRINT1("type: %ld, hbmMask: %p, hbmColor: %p, xHot: %hd, yHot: %hd\n", type, hbm, hbmColor, xHot, yHot);
+        n++;
+    }
+
+    return 1;
+}
 
 /* EOF */
